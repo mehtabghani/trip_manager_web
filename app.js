@@ -9,18 +9,18 @@ const Schema = mongoose.Schema;
 
 var port = 3001;
 var dbPort = 27017;
-var dbName = "meeting_app";
+var dbName = "trip_manager_db";
 var dbHost = "127.0.0.1"
 var dbURL  = 'mongodb://'+ dbHost+':'+ dbPort +'/'+ dbName;
 
 mongoose.connect(dbURL);
 
 //setup view engine
-const swig = require('swig');
-app.engine('html', swig.renderFile);
+//const swig = require('swig');
+//app.engine('html', swig.renderFile);
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
