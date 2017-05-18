@@ -11,8 +11,11 @@ router.get('/', function(req, res){
 });
 
 router.post('/signup', userController.createUser);
-router.post('/login',  userController.login);
-router.get('/users',  userController.getUsers);
+router.post('/login', userController.login);
+
+//USER
+router.get('/users', userController.getUsers);
+router.get('/user/:user_id', userController.getUser);
 
 
 module.exports = router;

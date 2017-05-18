@@ -2,13 +2,23 @@
 
 const User = require('../models/User.model');
 const UserToken = require('../models/UserToken.model');
+const jwt = require('jsonwebtoken');
 
+//TOKEN
 
-let createAccessToken = function(user_id, callBack) {
+let createAccessToken = function(userId, callBack) {
+
+    let token = jwt.sign({ user_id: '9' }, 'com.bathem');
+    console.log('createAccessToken: ' + token);
+
+    // // verify a token symmetric
+    // jwt.verify(token, 'shhhhh', function(err, decoded) {
+    //     console.log(decoded.user_id) // bar
+    // });
 
     let newToken = new UserToken();
-    newToken.user_id = user_id;
-    newToken.access_token = "591d4c4fd0bf50056e4671a8";
+    newToken.user_id = userId;
+    newToken.access_token = token;
     newToken.created_on = Date.now();
     newToken.expired_on = Date.now();
 
@@ -32,6 +42,9 @@ let getAccessToken = function (userId, callBack) {
     });
 };
 
+
+//USERS
+
 let getAllUsers = function (callBack) {
 
     let query = User.find({});
@@ -44,8 +57,33 @@ let getAllUsers = function (callBack) {
     });
 };
 
-let createUser = function (newUser, callBack) {
+let getUserByNameAndPassword = function (userName, pswd, callBack) {
 
+    let query = User.findOne({});
+    query.where({user_name: userName, password:pswd});
+    query.exec(function(err, user) {
+        if (err) {
+            console.log("FIND USER BY NAME:" + err);
+        }
+
+        callBack(user, err);
+    });
+};
+
+let getUserById = function (userID,  callBack) {
+
+    let query = User.findOne({});
+    query.where({user_id: userID});
+    query.exec(function(err, user) {
+        if (err) {
+            console.log("FIND USER:" + err);
+        }
+
+        callBack(user, err);
+    });
+};
+
+let createUser = function (newUser, callBack) {
 
     newUser.save(function(err, user){
              if(err) {
@@ -60,7 +98,6 @@ let createUser = function (newUser, callBack) {
 
 // ROUTE HANDLERS
 exports.createUser = function(req, res) {
-
 
     let newUser = new User();
     newUser.user_name = req.body.user_name;
@@ -93,16 +130,13 @@ exports.createUser = function(req, res) {
 exports.login = function(req, res) {
 
     let userName = req.body.user_name;
-    let pwd = req.body.password;
+    let pswd = req.body.password;
 
-    let query = User.findOne({});
-    query.where({user_name: userName, password:pwd});
-    query.exec(function(err, user){
-        if(err) {
-            console.log("FIND LOGIN:" + err);
+    getUserByNameAndPassword(userName, pswd, function (user, err) {
+        if(err || user == null) {
+            console.log("FIND User:" + err);
             return res.send('Failed to login');
         }
-
 
         getAccessToken(user.user_id, function(accessToken, error){
 
@@ -119,9 +153,8 @@ exports.login = function(req, res) {
                 user_id: user.user_id
             });
         });
-
-
     });
+
 };
 
 exports.getUsers = function(req, res) {
@@ -133,5 +166,17 @@ exports.getUsers = function(req, res) {
         }
 
         res.json(users);
+    });
+};
+
+exports.getUser = function(req, res) {
+
+    getUserById(req.params.user_id, function(user, err){
+
+        if( err || user == null) {
+            return res.send('Failed to get user');
+        }
+
+        res.json(user);
     });
 };
