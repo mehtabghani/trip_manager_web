@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const mongooseHidden = require('mongoose-hidden')();
 const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose);
@@ -18,7 +19,8 @@ let UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        hide: true
     },
     created_on: {
         type: Date,
@@ -34,6 +36,7 @@ UserSchema.plugin(autoIncrement.plugin,
         incrementBy: 1
     });
 
+UserSchema.plugin(mongooseHidden);
 
 
 //middleware

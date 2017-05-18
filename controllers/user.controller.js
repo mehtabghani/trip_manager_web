@@ -4,6 +4,7 @@ const User = require('../models/User.model');
 const UserToken = require('../models/UserToken.model');
 const jwt = require('jsonwebtoken');
 
+
 //TOKEN
 
 let createAccessToken = function(userId, callBack) {
