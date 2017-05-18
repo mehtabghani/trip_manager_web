@@ -10,4 +10,9 @@ router.get('/', function(req, res){
    res.send('Every thing is ok!');
 });
 
+router.post('/signup', userController.createUser);
+router.post('/login',  userController.login);
+router.get('/users',  userController.getUsers);
+
+
 module.exports = router;

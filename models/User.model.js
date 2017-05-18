@@ -1,10 +1,39 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const autoIncrement = require('mongoose-auto-increment');
+
+autoIncrement.initialize(mongoose);
+
 let UserSchema = new Schema({
-    username: String,
-    password: String
+    user_id: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    user_name: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    created_on: {
+        type: Date,
+        default: Date.now
+    }
 });
+
+UserSchema.plugin(autoIncrement.plugin,
+    {
+        model: 'User',
+        field: 'user_id',
+        startAt: 1,
+        incrementBy: 1
+    });
+
 
 
 //middleware

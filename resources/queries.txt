@@ -1,0 +1,25 @@
+
+// USER
+db.createCollection('users');
+
+
+//insert user
+db.users.insertOne({
+    user_name: "test",
+    password: "qwerty",
+    user_id: "1"",
+    created_on: ""
+})
+
+//ACCES TOKEN
+
+db.createCollection('user_token');
+
+
+//insert user token
+db.users.insertOne({
+    access_token: "",
+    user_id: "1"",
+    created_on: "",
+    expired_on: ""
+})
