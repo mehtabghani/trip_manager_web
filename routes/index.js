@@ -19,7 +19,7 @@ router.get('/user/:user_id', userController.getUser);
 //TRIPS
 router.post('/trip', tripController.createTrip);
 router.get('/trip/:trip_id', tripController.getTrip);
-router.get('/trips/:user_id', tripController.getAllTrip);
+router.get('/trips/:user_id', tripController.getAllTrips);
 
 
 

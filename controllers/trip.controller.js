@@ -74,7 +74,7 @@ exports.getTrip = function(req, res) {
     });
 };
 
-exports.getAllTrip = function(req, res) {
+exports.getAllTrips = function(req, res) {
 
     getAllTripsByUserId(req.params.user_id, function (trips, error) {
         if(error){
