@@ -3,45 +3,7 @@
 const User = require('../models/User.model');
 const UserToken = require('../models/UserToken.model');
 const jwt = require('jsonwebtoken');
-
-
-//TOKEN
-
-let createAccessToken = function(userId, callBack) {
-
-    let token = jwt.sign({ user_id: '9' }, 'com.bathem');
-    console.log('createAccessToken: ' + token);
-
-    // // verify a token symmetric
-    // jwt.verify(token, 'shhhhh', function(err, decoded) {
-    //     console.log(decoded.user_id) // bar
-    // });
-
-    let newToken = new UserToken();
-    newToken.user_id = userId;
-    newToken.access_token = token;
-    newToken.created_on = Date.now();
-    newToken.expired_on = Date.now();
-
-    newToken.save(function (err, token) {
-        if(err) {
-            console.log('SAVE ACCESS_TOKEN:' + err);
-        }
-        return callBack(token.access_token, err);
-    });
-};
-
-let getAccessToken = function (userId, callBack) {
-
-    let query = UserToken.findOne({});
-    query.where({user_id: userId});
-    query.exec(function(err, token){
-        if(err) {
-            console.log('GET ACCESS_TOKEN:' + err);
-        }
-        callBack(token.access_token, err);
-    });
-};
+const tokenController = require('../controllers/token.controller');
 
 
 //USERS
@@ -111,7 +73,7 @@ exports.createUser = function(req, res) {
             return res.send('Failed to create new user');
         }
 
-        createAccessToken(user.user_id,
+        tokenController.createAccessToken(user.user_id,
             function (access_token, error){
 
                 if(error || access_token == 0 || access_token == null)
@@ -120,8 +82,8 @@ exports.createUser = function(req, res) {
                 return res.json({
                     msg:'Signup successfull',
                     status:'',
-                    acces_token: access_token,
-                    user_id: user.user_id
+                    access_token: access_token,
+                    user_id: user.user_id.toString()
                 });
             });
     });
@@ -139,7 +101,7 @@ exports.login = function(req, res) {
             return res.send('Failed to login');
         }
 
-        getAccessToken(user.user_id, function(accessToken, error){
+        tokenController.getAccessToken(user.user_id, function(accessToken, error){
 
             console.log("accessToken:"+ accessToken)
 
@@ -151,7 +113,7 @@ exports.login = function(req, res) {
                 msg:'login successfull',
                 status:'',
                 access_token: accessToken,
-                user_id: user.user_id
+                user_id: user.user_id.toString()
             });
         });
     });
