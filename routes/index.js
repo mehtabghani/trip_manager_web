@@ -9,26 +9,36 @@ const constants = require('../constants/constants');
 const keyConstants = require('../constants/keyConstants');
 
 
-router.use('/signup', function (req, res, next) {
+let checkAccessToken = function(req, callBack) {
+    tokenController.validateUserToken(req, callBack);
+};
+
+let checkApiSecret = function(req, res, next) {
 
     let errorMsg = '';
-    if (req.headers[keyConstants.key_api_secret] === constants.config.api_secret) {
-        next()
-        return;
 
-    }
-    else if(req.api_secret == null)
-        errorMsg = 'Api secret required'
-    else
-        errorMsg = 'Wrong API secret'
+    if (req.headers[keyConstants.key_api_secret] == null){
+        errorMsg = 'Api secret required';
+   } else if (req.headers[keyConstants.key_api_secret] === constants.config.api_secret) {
+        next();
+        return;
+    } else
+         errorMsg = 'Wrong API secret';
 
     res.send(errorMsg);
 
-});
+};
+
+
+//----------------------------------------
+
+// middleware
+router.use('/signup', checkApiSecret);
+router.use('/login', checkApiSecret);
 
 router.all('*', function (req, res, next) {
 
-   console.log(req.url)
+   console.log(req.url);
     if (req.url === '/') {
         next();
         return;
@@ -54,6 +64,8 @@ router.all('*', function (req, res, next) {
 
 });
 
+// -------------------------------------------
+
 //ROUTE: Home page
 router.get('/', function(req, res){
     res.send('Every thing is ok!');
@@ -71,13 +83,5 @@ router.post('/trip', tripController.createTrip);
 router.get('/trip/:trip_id', tripController.getTrip);
 router.get('/trips/:user_id', tripController.getAllTrips);
 
-
-
 module.exports = router;
 
-
-let checkAccessToken = function(req, callBack) {
-
-   tokenController.validateUserToken(req, callBack);
-
-}
