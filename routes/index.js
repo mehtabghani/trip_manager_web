@@ -14,12 +14,14 @@ let checkAccessToken = function(req, callBack) {
 };
 
 let checkApiSecret = function(req, res, next) {
-
     let errorMsg = '';
 
     if (req.headers[keyConstants.key_api_secret] == null){
         errorMsg = 'Api secret required';
-   } else if (req.headers[keyConstants.key_api_secret] === constants.config.api_secret) {
+   } else if (req.headers[keyConstants.key_api_secret] === constants.api_secret) {//constants.config.api_secret
+
+     console.log('else if')
+
         next();
         return;
     } else
@@ -39,7 +41,7 @@ router.use('/login', checkApiSecret);
 router.all('*', function (req, res, next) {
 
    console.log(req.url);
-    if (req.url === '/') {
+    if (req.url === '/' || req.url === '/login' ||req.url === '/signup') {
         next();
         return;
     }
@@ -84,4 +86,3 @@ router.get('/trip/:trip_id', tripController.getTrip);
 router.get('/trips/:user_id', tripController.getAllTrips);
 
 module.exports = router;
-

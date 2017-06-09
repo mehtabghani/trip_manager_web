@@ -95,11 +95,15 @@ exports.login = function(req, res) {
     let userName = req.body.user_name;
     let pswd = req.body.password;
 
+    console.log("User:" + userName);
+
+
     getUserByNameAndPassword(userName, pswd, function (user, err) {
         if(err || user == null) {
             console.log("FIND User:" + err);
             return res.send('Failed to login');
         }
+        console.log("FIND User:" + user);
 
         tokenController.getAccessToken(user.user_id, function(accessToken, error){
 
