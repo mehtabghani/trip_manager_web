@@ -117,7 +117,7 @@ exports.login = function(req, res) {
                 msg:'login successfull',
                 status:'',
                 access_token: accessToken,
-                user_id: user.user_id.toString()
+                user_id: user.user_id
             });
         });
     });

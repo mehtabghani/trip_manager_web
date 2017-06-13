@@ -82,6 +82,12 @@ exports.getAllTrips = function(req, res) {
             return res.send("Failed to get trips");
         }
 
-        return res.json(trips);
+        var data = []
+        for(var trip in trips) {
+
+          data.push(trips[trip])
+        }
+
+        return res.json(data);
     });
 };

@@ -13,7 +13,7 @@ let TripSchema = new Schema({
         unique: true
     },
     user_id: {
-        type: String,
+        type: Number,
         required: true
     },
     start_lattitude: {
